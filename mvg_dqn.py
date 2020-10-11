@@ -5,8 +5,8 @@ import torch.nn.functional as F
 import numpy as np
 from replay_memory import ReplayBuffer, PrioritizedReplayBuffer
 from mvg_ import *
-from spinup.utils.logx import EpochLogger
-from spinup.utils.run_utils import setup_logger_kwargs
+from logx import EpochLogger
+from logx import setup_logger_kwargs
 import random
 import os
 import pickle
@@ -301,7 +301,8 @@ for step in range(1, STEP_NUM // N_ENVS + 1):
         # check time interval
         time_interval = round(time.time() - start_time, 2)
         # calc mean return
-        mean_100_ep_return = round(np.mean([epinfo['r'] for epinfo in epinfobuf]), 2)
+        period_results=[epinfo['r'] for epinfo in epinfobuf]
+        mean_100_ep_return = round(np.mean(period_results), 2)
         result.append(mean_100_ep_return)
         # print log
         print('Used Step: ', dqn.memory_counter,
@@ -310,7 +311,9 @@ for step in range(1, STEP_NUM // N_ENVS + 1):
               '| Mean ep 100 return: ', mean_100_ep_return,
               '| Used Time:', time_interval)
         logger.log_tabular('TotalEnvInteracts', dqn.memory_counter)
-        logger.log_tabular('EpRet', mean_100_ep_return)
+        logger.log_tabular('AverageEpRet', mean_100_ep_return)
+        logger.log_tabular('MinEpRet', np.min(period_results))
+        logger.log_tabular('MaxEpRet', np.max(period_results))
         logger.log_tabular('time', time_interval)
         # logger.log_tabular("loss", with_min_and_max=True)
         logger.dump_tabular()
