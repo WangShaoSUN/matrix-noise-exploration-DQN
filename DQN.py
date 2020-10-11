@@ -4,8 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from replay_memory import ReplayBuffer, PrioritizedReplayBuffer
-from spinup.utils.logx import EpochLogger
-from spinup.utils.run_utils import setup_logger_kwargs
+from logx import EpochLogger
+from logx import setup_logger_kwargs
 import random
 import os
 import pickle
@@ -38,7 +38,7 @@ LEARN_FREQ = 4
 # number of environments for C51
 N_ENVS = 16
 # Total simulation step
-STEP_NUM = int(1e+8)
+STEP_NUM = int((2e+7)+2)
 # gamma for MDP
 GAMMA = 0.99
 # visualize for agent playing
@@ -297,7 +297,9 @@ for step in range(1, STEP_NUM//N_ENVS+1):
               '| Mean ep 100 return: ', mean_100_ep_return,
               '| Used Time:',time_interval)
         logger.log_tabular('TotalEnvInteracts', dqn.memory_counter)
-        logger.log_tabular('EpRet', mean_100_ep_return)
+        logger.log_tabular('AverageEpRet', mean_100_ep_return)
+        logger.log_tabular('MinEpRet', np.min(period_results))
+        logger.log_tabular('MaxEpRet', np.max(period_results))
         logger.log_tabular('time', time_interval)
         logger.log_tabular("loss",with_min_and_max=True)
         logger.dump_tabular()
