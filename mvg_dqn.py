@@ -5,8 +5,12 @@ import torch.nn.functional as F
 import numpy as np
 from replay_memory import ReplayBuffer, PrioritizedReplayBuffer
 from mvg_ import *
+
 from logx import EpochLogger
 from logx import setup_logger_kwargs
+
+from logx import *
+
 import random
 import os
 import pickle
@@ -39,7 +43,7 @@ LEARN_FREQ = 4
 
 '''Environment Settings'''
 # number of environments for C51
-N_ENVS = 16
+N_ENVS = 8
 # Total simulation step
 STEP_NUM = int(2e+7+2)
 # gamma for MDP
@@ -69,7 +73,7 @@ EPSILON = 1.0
 SAVE = True
 LOAD = False
 # save frequency
-SAVE_FREQ = int(1e+3)
+SAVE_FREQ = int(3e+3)
 # paths for predction net, target net, result log
 PRED_PATH = './data/model/dqn_pred_net_o_' + args.games + '.pkl'
 TARGET_PATH = './data/model/dqn_target_net_o_' + args.games + '.pkl'

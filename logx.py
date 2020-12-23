@@ -1,5 +1,5 @@
 import json
-import joblib
+#import joblib
 import shutil
 import numpy as np
 import os.path as osp, time, atexit, os
@@ -359,7 +359,8 @@ class Logger:
         if proc_id() == 0:
             fname = 'vars.pkl' if itr is None else 'vars%d.pkl' % itr
             try:
-                joblib.dump(state_dict, osp.join(self.output_dir, fname))
+    #               joblib.dump(state_dict, osp.join(self.output_dir, fname))
+               pass
             except:
                 self.log('Warning: could not pickle state_dict.', color='red')
 

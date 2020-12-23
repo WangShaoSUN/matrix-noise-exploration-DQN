@@ -1,11 +1,17 @@
+#encoding=utf-8
 import gym
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from replay_memory import ReplayBuffer, PrioritizedReplayBuffer
+
 from logx import EpochLogger
 from logx import setup_logger_kwargs
+
+from logx import  *
+
+
 import random
 import os
 import pickle
@@ -14,7 +20,7 @@ from collections import deque
 import matplotlib.pyplot as plt
 from wrappers import wrap, wrap_cover, SubprocVecEnv
 
-# 处理输入参数（游戏名称）
+
 import argparse
 parser = argparse.ArgumentParser(description='Some settings of the experiment.')
 parser.add_argument('--games', type=str,default="Breakout", help='name of the games. for example: Breakout')
@@ -36,9 +42,13 @@ LEARN_FREQ = 4
 
 '''Environment Settings'''
 # number of environments for C51
-N_ENVS = 16
+N_ENVS = 8
 # Total simulation step
+
 STEP_NUM = int((2e+7)+2)
+
+STEP_NUM = int(2e+7+2)
+
 # gamma for MDP
 GAMMA = 0.99
 # visualize for agent playing
@@ -65,7 +75,7 @@ EPSILON = 1.0
 SAVE = True
 LOAD = False
 # save frequency
-SAVE_FREQ = int(1e+3)
+SAVE_FREQ = int(2e+3)
 # paths for predction net, target net, result log
 PRED_PATH = './data/model/dqn_pred_net_o_'+args.games+'.pkl'
 TARGET_PATH = './data/model/dqn_target_net_o_'+args.games+'.pkl'
@@ -89,7 +99,7 @@ class ConvNet(nn.Module):
         # action value
         self.fc_q = nn.Linear(512, N_ACTIONS) 
         
-        # 初始化参数值    
+     
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 # nn.init.orthogonal_(m.weight, gain = np.sqrt(2))
@@ -287,6 +297,7 @@ for step in range(1, STEP_NUM//N_ENVS+1):
         # check time interval
         time_interval = round(time.time() - start_time, 2)
         # calc mean return
+        period_results=[epinfo['r'] for epinfo in epinfobuf]
         mean_100_ep_return = round(np.mean([epinfo['r'] for epinfo in epinfobuf]),2)
         result.append(mean_100_ep_return)
         # logger.log_tabular('Epoch', t // steps_per_epoch)
@@ -307,9 +318,7 @@ for step in range(1, STEP_NUM//N_ENVS+1):
         # dqn.save_model()
         # pkl_file = open(RESULT_PATH, 'wb')
         # pickle.dump(np.array(result), pkl_file)
-        # pkl_file.close()
-
-    s = s_
+        # pkl_file.close()   s = s_
     if RENDERING:
         env.render()
 print("The training is done!")
