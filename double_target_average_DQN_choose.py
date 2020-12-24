@@ -20,6 +20,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Some settings of the experiment.')
 parser.add_argument('--games', type=str, default="Breakout", help='name of the games. for example: Breakout')
 parser.add_argument('--seed', type=int, default=10, help='seed of the games')
+parser.add_argument('--dealy_interval', type=int, default=50, help='seed of the games')
 args = parser.parse_args()
 args.games = "".join(args.games)
 
@@ -121,7 +122,7 @@ class ConvNet(nn.Module):
         self.load_state_dict(torch.load(PATH))
 
 n=10
-dealy_interval=1000
+dealy_interval=args.dealy_interval
 class Smoothing_DQN(object):
     def __init__(self):
         self.pred_net_Q1, self.target_net_Q1 = ConvNet(), ConvNet()
@@ -163,9 +164,9 @@ class Smoothing_DQN(object):
     def save_model(self):
         # save prediction network and target network
         self.pred_net_Q1.save(PRED_PATH)
-        self.target_net_Q1.save(TARGET_PATH)
+        # self.target_net_Q1.save(TARGET_PATH)
         self.pred_net_Q2.save(PRED_PATH1)
-        self.target_net_Q2.save(TARGET_PATH)
+        # self.target_net_Q2.save(TARGET_PATH)
 
     def load_model(self):
         # load prediction network and target network
@@ -198,7 +199,7 @@ class Smoothing_DQN(object):
     def save_history(self):
         if self.memory_counter%dealy_interval==0:
             self.target_deque1.append(self.pred_net_Q1)
-        if self.memory_counter%dealy_interval+100==0:
+        if self.memory_counter%(dealy_interval+100)==0:
             self.target_deque2.append(self.pred_net_Q2)
     # def update_target(self):
     #     # weight=np.array([0.9,0.])
@@ -372,8 +373,10 @@ for step in range(1, STEP_NUM // N_ENVS + 1):
         logger.log_tabular('time', time_interval)
         logger.log_tabular("loss", with_min_and_max=True)
         logger.dump_tabular()
+
+        # dqn.save_model()
         # save model
-        if step>int(9e6):
+    if step % int(1e6) == 0:
             dqn.save_model()
         # pkl_file = open(RESULT_PATH, 'wb')
         # pickle.dump(np.array(result), pkl_file)
