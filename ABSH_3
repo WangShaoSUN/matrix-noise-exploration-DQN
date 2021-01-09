@@ -1,0 +1,20 @@
+
+CUDA_VISIBLE_DEVICES=1 python DQN.py --games Bowling  --seed 0
+
+CUDA_VISIBLE_DEVICES=1 python DQN.py --games Boxing  --seed 0  --save_freq 5000
+
+CUDA_VISIBLE_DEVICES=1 python DQN.py --games Boxing  --seed 10  --save_freq 5000
+
+CUDA_VISIBLE_DEVICES=1 python DQN.py --games Centipede  --seed 0 --save_freq 5000
+
+CUDA_VISIBLE_DEVICES=1 python DQN.py --games Centipede  --seed 10 --save_freq 5000
+
+CUDA_VISIBLE_DEVICES=1 python DQN.py --games ChopperCommand  --seed 10 --save_freq 5000
+
+
+CUDA_VISIBLE_DEVICES=1 python DQN.py --games ChopperCommand  --seed 10 --save_freq 5000
+
+
+
+
+
