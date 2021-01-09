@@ -1,0 +1,16 @@
+
+python DQN.py --games Alien  --seed 0
+
+python DQN.py --games Amidar  --seed 0
+
+python DQN.py --games Assault  --seed 0
+
+python DQN.py --games Asterix  --seed 0
+
+python DQN.py --games Asteroids  --seed 0
+
+python DQN.py --games Gopher  --seed 0
+
+python DQN.py --games Gravitar  --seed 0
+
+
