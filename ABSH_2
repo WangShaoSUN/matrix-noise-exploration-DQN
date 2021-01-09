@@ -1,0 +1,18 @@
+
+CUDA_VISIBLE_DEVICES=1 python double_target_average.py --games DemonAttack  --seed 0
+
+CUDA_VISIBLE_DEVICES=1 python double_target_average.py --games DemonAttack  --seed 10 
+
+CUDA_VISIBLE_DEVICES=1 python double_target_average.py --games DemonAttack  --seed 2 
+
+CUDA_VISIBLE_DEVICES=1 python double_target_average.py --games DoubleDunk  --seed 66 
+
+CUDA_VISIBLE_DEVICES=1 python double_target_average.py --games DoubleDunk  --seed 0 -
+
+CUDA_VISIBLE_DEVICES=1 python double_target_average.py --games DoubleDunk  --seed 10
+
+
+
+
+
+
