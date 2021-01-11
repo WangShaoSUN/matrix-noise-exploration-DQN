@@ -18,9 +18,11 @@ from  collections import deque
 import argparse
 
 parser = argparse.ArgumentParser(description='Some settings of the experiment.')
-parser.add_argument('--games', type=str, default="Breakout", help='name of the games. for example: Breakout')
-parser.add_argument('--seed', type=int, default=10, help='seed of the games')
+parser.add_argument('--games', type=str, default="MsPacman", help='name of the games. for example: Breakout')
+parser.add_argument('--seed', type=int, default=0, help='seed of the games')
 parser.add_argument('--dealy_interval', type=int, default=50, help='seed of the games')
+parser.add_argument('--save_freq',default=5e3, help='seed of the games')
+
 args = parser.parse_args()
 args.games = "".join(args.games)
 
@@ -67,7 +69,7 @@ EPSILON = 1.0
 SAVE = True
 LOAD = False
 # save frequency
-SAVE_FREQ = int(1e+3)
+SAVE_FREQ = int((args.save_freq))
 # paths for predction net, target net, result log
 PRED_PATH = './data/model/dqn_pred_net_o_1_' + args.games + '.pkl'
 PRED_PATH1 = './data/model/dqn_pred_net_o_2_' + args.games + '.pkl'
@@ -279,6 +281,7 @@ class Smoothing_DQN(object):
         self.optimizer.step()
 
         loss = self.loss_function(q_eval2, q_target1)
+        logger.store(mean_Q=(q_target1).mean().item())
         self.optimizer1.zero_grad()
         loss.backward()
         self.optimizer1.step()
@@ -294,20 +297,21 @@ kwargs = {
 
     'seed': args.seed,
     'delay_interval':dealy_interval,
+    "save_freq":SAVE_FREQ,
 }
 logger.save_config(kwargs)
 # model load with check
-if LOAD and os.path.isfile(PRED_PATH) and os.path.isfile(TARGET_PATH):
-    dqn.load_model()
-    pkl_file = open(RESULT_PATH, 'rb')
-    result = pickle.load(pkl_file)
-    pkl_file.close()
-    print('Load complete!')
-else:
-    result = []
-    print('Initialize results!')
-
-print('Collecting experience...')
+# if LOAD and os.path.isfile(PRED_PATH) and os.path.isfile(TARGET_PATH):
+#     dqn.load_model()
+#     pkl_file = open(RESULT_PATH, 'rb')
+#     result = pickle.load(pkl_file)
+#     pkl_file.close()
+#     print('Load complete!')
+# else:
+#     result = []
+#     print('Initialize results!')
+#
+# print('Collecting experience...')
 
 # episode step for accumulate reward
 epinfobuf = deque(maxlen=100)
@@ -358,7 +362,7 @@ for step in range(1, STEP_NUM // N_ENVS + 1):
         # calc mean return
         period_results=[epinfo['r'] for epinfo in epinfobuf]
         mean_100_ep_return = round(np.mean([epinfo['r'] for epinfo in epinfobuf]), 2)
-        result.append(mean_100_ep_return)
+        # result.append(mean_100_ep_return)
         # logger.log_tabular('Epoch', t // steps_per_epoch)
         # print log
         print('Used Step: ', dqn.memory_counter,
@@ -371,10 +375,11 @@ for step in range(1, STEP_NUM // N_ENVS + 1):
         logger.log_tabular('MinEpRet', np.min(period_results))
         logger.log_tabular('MaxEpRet', np.max(period_results))
         logger.log_tabular('time', time_interval)
+        logger.log_tabular("mean_Q", with_min_and_max=True)
         logger.log_tabular("loss", with_min_and_max=True)
         logger.dump_tabular()
 
-        # dqn.save_model()
+        dqn.save_model()
         # save model
     if step % int(1e6) == 0:
             dqn.save_model()
