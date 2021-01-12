@@ -1,13 +1,13 @@
 
-python DQN_hard.py --games Zaxxon  --seed 0
+python DQN_hard.py --games StarGunner  --seed 0
 
-python DQN_hard.py --games WizardOfWor  --seed 0   
+python DQN_hard.py --games SpaceInvaders  --seed 0   
 
-python DQN_hard.py --games VideoPinball  --seed 5   --save_freq  5000
+python DQN_hard.py --games TimePilot  --seed 0   --save_freq  5000
 
-python DQN_hard.py --games Venture  --seed 0 --save_freq  5000
+python DQN_hard.py --games Tennis  --seed 0 --save_freq  5000
 
-python DQN_hard.py --games UpNDown  --seed 6  
+python DQN_hard.py --games Seaquest  --seed 6  
 
 python DQN_hard.py --games Tutankham  --seed 0
 
