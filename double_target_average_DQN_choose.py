@@ -18,10 +18,10 @@ from  collections import deque
 import argparse
 
 parser = argparse.ArgumentParser(description='Some settings of the experiment.')
-parser.add_argument('--games', type=str, default="MsPacman", help='name of the games. for example: Breakout')
+parser.add_argument('--games', type=str, default="Asterix", help='name of the games. for example: Breakout')
 parser.add_argument('--seed', type=int, default=0, help='seed of the games')
 parser.add_argument('--dealy_interval', type=int, default=50, help='seed of the games')
-parser.add_argument('--save_freq',default=5e3, help='seed of the games')
+parser.add_argument('--save_freq',default=1e3, help='seed of the games')
 
 args = parser.parse_args()
 args.games = "".join(args.games)
