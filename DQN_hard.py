@@ -18,10 +18,10 @@ from wrappers import wrap, wrap_cover, SubprocVecEnv
 import argparse
 
 parser = argparse.ArgumentParser(description='Some settings of the experiment.')
-parser.add_argument('--games', type=str, default="Breakout", help='name of the games. for example: Breakout')
+parser.add_argument('--games', type=str, default="Asterix", help='name of the games. for example: Breakout')
 parser.add_argument('--seed', type=int, default=10, help='seed of the games')
 parser.add_argument('--save_freq',type=int, default=1e3, help='seed of the games')
-parser.add_argument('--targ_freq',type=int, default=2000, help='seed of the games')
+parser.add_argument('--targ_freq',type=int, default=500, help='seed of the games')
 args = parser.parse_args()
 args.games = "".join(args.games)
 
@@ -147,8 +147,7 @@ class DQN(object):
     def update_target(self, target, pred, update_rate):
         # update target network parameters using predcition network
         for target_param, pred_param in zip(target.parameters(), pred.parameters()):
-            target_param.data.copy_(
-                                      pred_param.data)
+            target_param.data.copy_(pred_param.data)
 
     def save_model(self):
         # save prediction network and target network
@@ -185,6 +184,7 @@ class DQN(object):
         self.learn_step_counter += 1
         # target parameter update
         if self.learn_step_counter % TARGET_REPLACE_ITER == 0:
+            # print("learn step",self.learn_step_counter)
             self.update_target(self.target_net, self.pred_net, 1e-2)
 
         b_s, b_a, b_r, b_s_, b_d = self.replay_buffer.sample(BATCH_SIZE)
@@ -233,6 +233,7 @@ kwargs = {
     'seed': args.seed,
     "target Update_interval":TARGET_REPLACE_ITER,
     "savw_interval":args.save_freq,
+     "epilon ":0.01,
 }
 logger.save_config(kwargs)
 # model load with check
@@ -278,13 +279,13 @@ for step in range(1, STEP_NUM // N_ENVS + 1):
         dqn.store_transition(s[i], a[i], clip_r[i], s_[i], done[i])
 
     # annealing the epsilon(exploration strategy)
-    if step <= int(2e+4):
+    if step <= int(1e+4):
         # linear annealing to 0.9 until million step
         EPSILON -= 0.9 / 2e+4
-    # elif step <= int(2e+4):
-    #     # else:
-    #     # linear annealing to 0.99 until the end
-    #     EPSILON -= 0.09 / 1e+4
+    elif step <= int(2e+4):
+        # else:
+        # linear annealing to 0.99 until the end
+        EPSILON -= 0.09 / 1e+4
 
     # if memory fill 50K and mod 4 = 0(for speed issue), learn pred net
     if (LEARN_START <= dqn.memory_counter) and (dqn.memory_counter % LEARN_FREQ == 0):
