@@ -1,13 +1,13 @@
 
-CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games BeamRider  --seed 0  --targ_freq 1 --save_freq  1000
+CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games Atlantis  --seed 0  --targ_freq 1 --save_freq  1000
 
-CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games BeamRider  --seed 10 --targ_freq 2 --save_freq  1000
+CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games Atlantis  --seed 10 --targ_freq 2 --save_freq  1000
 
-CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games BeamRider  --seed 20 --targ_freq 50 --save_freq  1000
+CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games Atlantis  --seed 20 --targ_freq 50 --save_freq  1000
 
-CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games BeamRider  --seed 4450 --targ_freq 20  --save_freq  1000
+CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games Atlantis  --seed 4450 --targ_freq 20  --save_freq  1000
 
-CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games BeamRider  --seed 4450 --targ_freq 200  --save_freq  1000
+CUDA_VISIBLE_DEVICES=1 python DQN_hard.py --games Atlantis  --seed 4450 --targ_freq 200  --save_freq  1000
 
 #python DQN_hard.py --games Tutankham  --seed 0
 
