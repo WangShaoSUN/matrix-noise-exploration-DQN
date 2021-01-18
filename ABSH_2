@@ -1,13 +1,13 @@
 
 #CUDA_VISIBLE_DEVICES=0 python double_target_average_DQN_choose.py --games DemonAttack  --seed 0
 
-#CUDA_VISIBLE_DEVICES=0 python double_target_average_DQN_choose.py --games DemonAttack  --seed 10 
+CUDA_VISIBLE_DEVICES=0 python DQN_hard.py --games BankHeist  --seed 10 --save_freq 1000 --targ_freq 1
 
-#CUDA_VISIBLE_DEVICES=0 python double_target_average_DQN_choose.py --games FishingDerby  --seed 2 
+CUDA_VISIBLE_DEVICES=0 python DQN_hard.py.py --games BankHeist  --seed 2 --save_freq 1000  --targ_freq  10
+ 
+CUDA_VISIBLE_DEVICES=0 python double_target_average_DQN_choose.py --games BankHeist  --seed 66 
 
-CUDA_VISIBLE_DEVICES=0 python double_target_average_DQN_choose.py --games DoubleDunk  --seed 66 
-
-CUDA_VISIBLE_DEVICES=0 python double_target_average_DQN_choose.py --games FishingDerby  --seed 0 -
+CUDA_VISIBLE_DEVICES=0 python double_target_average_DQN_choose.py --games BankHeist  --seed 0 -
 
 CUDA_VISIBLE_DEVICES=0 python double_target_average_DQN_choose.py --games DoubleDunk  --seed 10
 
