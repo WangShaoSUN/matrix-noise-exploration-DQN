@@ -17,8 +17,9 @@ from wrappers import wrap, wrap_cover, SubprocVecEnv
 # 处理输入参数（游戏名称）
 import argparse
 parser = argparse.ArgumentParser(description='Some settings of the experiment.')
-parser.add_argument('--games', type=str,default="Breakout", help='name of the games. for example: Breakout')
-parser.add_argument('--seed', type=int,default=10, help='seed of the games')
+parser.add_argument('--games', type=str,default="Zaxxon", help='name of the games. for example: Breakout')
+parser.add_argument('--seed', type=int,default=0, help='seed of the games')
+parser.add_argument('--nenv', type=int,default=32, help='seed of the games')
 args = parser.parse_args()
 args.games = "".join(args.games)
 
@@ -36,7 +37,7 @@ LEARN_FREQ = 4
 
 '''Environment Settings'''
 # number of environments for C51
-N_ENVS = 16
+N_ENVS = args.nenv
 # Total simulation step
 STEP_NUM = int((2e+7)+2)
 # gamma for MDP
