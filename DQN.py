@@ -288,8 +288,8 @@ for step in range(1, STEP_NUM//N_ENVS+1):
         # check time interval
         time_interval = round(time.time() - start_time, 2)
         # calc mean return
-        mean_100_ep_return = round(np.mean([epinfo['r'] for epinfo in epinfobuf]),2)
-        result.append(mean_100_ep_return)
+        period_results=[epinfo['r'] for epinfo in epinfobuf]
+        mean_100_ep_return = round(np.mean(period_results), 2)
         # logger.log_tabular('Epoch', t // steps_per_epoch)
         # print log
         print('Used Step: ',dqn.memory_counter,
