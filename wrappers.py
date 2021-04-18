@@ -1,5 +1,5 @@
 # This code is mainly excerpted from openai baseline code.
-# https://github.com/openai/baselines/blob/master/baselines/common/atari_wrappers.py
+# https://github.com/openai/baselines/blob/master/baselines/common/atari_wrappers.(img, (84, 110), interpolation=cv2.INTER_AREmotes:
 import numpy as np
 from collections import deque
 import gym
@@ -19,7 +19,7 @@ class EpisodicLifeEnv(gym.Wrapper):
         self.was_real_done = True
         self.was_real_reset = False
 
-    def _step(self, action):
+    def step(self, action):
         obs, reward, done, info = self.env.step(action)
         self.was_real_done = done
         # check current lives, make loss of life terminal,
@@ -33,13 +33,14 @@ class EpisodicLifeEnv(gym.Wrapper):
         self.lives = lives
         return obs, reward, done, info
 
-    def _reset(self):
+    def reset(self):
         """Reset only when lives are exhausted.
         This way all states are still reachable even though lives are episodic,
         and the learner need not know about any of this behind-the-scenes.
         """
         if self.was_real_done:
             obs = self.env.reset()
+
             self.was_real_reset = True
         else:
             # no-op step to advance from terminal/lost life state
@@ -58,7 +59,7 @@ class NoopResetEnv(gym.Wrapper):
         self.override_num_noops = None
         assert env.unwrapped.get_action_meanings()[0] == 'NOOP'
 
-    def _reset(self):
+    def reset(self):
         """ Do no-op action for a number of steps in [1, noop_max]."""
         self.env.reset()
         if self.override_num_noops is not None:
@@ -81,7 +82,7 @@ class MaxAndSkipEnv(gym.Wrapper):
         self._obs_buffer = deque(maxlen=2)
         self._skip = skip
 
-    def _step(self, action):
+    def step(self, action):
         total_reward = 0.0
         done = None
         for _ in range(self._skip):
@@ -95,7 +96,7 @@ class MaxAndSkipEnv(gym.Wrapper):
 
         return max_frame, total_reward, done, info
 
-    def _reset(self):
+    def reset(self):
         """Clear past frame buffer and init. to first obs. from inner env."""
         self._obs_buffer.clear()
         obs = self.env.reset()
@@ -109,7 +110,7 @@ class FireResetEnv(gym.Wrapper):
         assert env.unwrapped.get_action_meanings()[1] == 'FIRE'
         assert len(env.unwrapped.get_action_meanings()) >= 3
 
-    def _reset(self):
+    def reset(self):
         self.env.reset()
         obs, _, done, _ = self.env.step(1)
         if done:
@@ -124,7 +125,7 @@ class ProcessFrame84(gym.ObservationWrapper):
         super(ProcessFrame84, self).__init__(env)
         self.observation_space = spaces.Box(low=0, high=255, shape=(84, 84, 1))
 
-    def _observation(self, obs):
+    def observation(self, obs):
         return ProcessFrame84.process(obs)
 
     @staticmethod
@@ -150,12 +151,12 @@ class ImageToPyTorch(gym.ObservationWrapper):
         old_shape = self.observation_space.shape
         self.observation_space = gym.spaces.Box(low=0.0, high=1.0, shape=(old_shape[-1], old_shape[0], old_shape[1]))
 
-    def _observation(self, observation):
+    def observation(self, observation):
         return np.swapaxes(observation, 2, 0)
 
 
 class ClippedRewardsWrapper(gym.RewardWrapper):
-    def _reward(self, reward):
+    def reward(self, reward):
         """Change all the positive rewards to 1, negative to -1 and keep zero."""
         return np.sign(reward)
 
@@ -165,7 +166,7 @@ class LazyFrames(object):
         """This object ensures that common frames between the observations are only stored once.
         It exists purely to optimize memory usage which can be huge for DQN's 1M frames replay
         buffers.
-        This object should only be converted to numpy array before being passed to the model.
+        This object should only be converted to numpy array before being passed to the model_1.
         You'd not belive how complex the previous solution was."""
         self._frames = frames
 
@@ -190,18 +191,18 @@ class FrameStack(gym.Wrapper):
         shp = env.observation_space.shape
         self.observation_space = spaces.Box(low=0, high=255, shape=(shp[0]*k, shp[1], shp[2]))
 
-    def _reset(self):
+    def reset(self):
         ob = self.env.reset()
         for _ in range(self.k):
             self.frames.append(ob)
-        return self._get_ob()
+        return self.get_ob()
 
-    def _step(self, action):
+    def step(self, action):
         ob, reward, done, info = self.env.step(action)
         self.frames.append(ob)
-        return self._get_ob(), reward, done, info
+        return self.get_ob(), reward, done, info
 
-    def _get_ob(self):
+    def get_ob(self):
         assert len(self.frames) == self.k
         return LazyFrames(list(self.frames))
 
@@ -261,7 +262,8 @@ class VecEnv(ABC):
         return self.step_wait()
 
     def render(self):
-        logger.warn('Render not defined for %s'%self)
+        pass
+        # logger.warn('Render not defined for %s'%self)
 
 def worker(remote, parent_remote, env_fn_wrapper):
     parent_remote.close()
@@ -270,6 +272,8 @@ def worker(remote, parent_remote, env_fn_wrapper):
         cmd, data = remote.recv()
         if cmd == 'step':
             ob, reward, done, info = env.step(data)
+            #change wang
+            # env.render()
             if done:
                 ob = env.reset()
             remote.send((ob, reward, done, info))
@@ -366,12 +370,17 @@ def wrap(env):
     env = ImageToPyTorch(env)
     env = FrameStack(env, 4)
     return env
+from nes_py.wrappers import JoypadSpace
 
+# Super Mario environment for OpenAI Gym
+import gym_super_mario_bros
 def wrap_cover(env_name,seed):
     print(seed)
     def wrap_():
         """Apply a common set of wrappers for Atari games."""
+        # env = gym.make(env_name)
         env = gym.make(env_name)
+        # env = JoypadSpace(env, [["right"], ["right", "A"]])
         env.seed(seed)
         env = Monitor(env, './')
         assert 'NoFrameskip' in env.spec.id
