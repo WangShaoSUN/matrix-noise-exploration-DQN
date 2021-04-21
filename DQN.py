@@ -58,7 +58,7 @@ print('USE GPU: '+str(USE_GPU))
 # mini-batch size
 BATCH_SIZE = 64
 # learning rage
-LR = arge.lr
+LR = args.lr
 # epsilon-greedy
 EPSILON = 1.0
 
@@ -227,6 +227,7 @@ logger = EpochLogger(**logger_kwargs)
 kwargs = {
 
         'seed': args.seed,
+        'learning rate':args.lr,
     }
 logger.save_config(kwargs)
 # model load with check
