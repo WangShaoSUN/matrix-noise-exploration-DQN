@@ -16,9 +16,6 @@ import os
 import pickle
 import time
 from collections import deque
-import matplotlib.pyplot as plt
-from wrappers_atari import wrap, wrap_cover, SubprocVecEnv
-
 # 处理输入参数（游戏名称）
 import argparse
 
