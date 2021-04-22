@@ -370,7 +370,7 @@ def wrap(env):
     env = ImageToPyTorch(env)
     env = FrameStack(env, 4)
     return env
-from nes_py.wrappers import JoypadSpace
+# from nes_py.wrappers import JoypadSpace
 
 # Super Mario environment for OpenAI Gym
 import gym_super_mario_bros
