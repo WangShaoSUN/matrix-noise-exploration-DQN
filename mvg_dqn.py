@@ -5,22 +5,26 @@ import torch.nn.functional as F
 import numpy as np
 from replay_memory import ReplayBuffer, PrioritizedReplayBuffer
 from mvg_ import *
+
 from logx import EpochLogger
 from logx import setup_logger_kwargs
+
+from logx import *
+
 import random
 import os
 import pickle
 import time
 from collections import deque
 import matplotlib.pyplot as plt
-from wrappers import wrap, wrap_cover, SubprocVecEnv
+from wrappers_atari import wrap, wrap_cover, SubprocVecEnv
 
 # 处理输入参数（游戏名称）
 import argparse
 
 parser = argparse.ArgumentParser(description='Some settings of the experiment.')
-parser.add_argument('--games', type=str, default="Breakout", help='name of the games. for example: Breakout')
-parser.add_argument('--seed', type=int,default=10, help='seed of the games')
+parser.add_argument('--games', type=str, default="TimePilot", help='name of the games. for example: Breakout')
+parser.add_argument('--seed', type=int,default=0, help='seed of the games')
 args = parser.parse_args()
 
 args.games = "".join(args.games)
@@ -49,6 +53,7 @@ RENDERING = False
 # openai gym env name
 # args.games="Breakout"
 ENV_NAME = args.games + 'NoFrameskip-v4'
+print(ENV_NAME)
 env = SubprocVecEnv([wrap_cover(ENV_NAME,args.seed+i) for i in range(N_ENVS)])
 N_ACTIONS = env.action_space.n
 N_STATES = env.observation_space.shape
@@ -69,10 +74,10 @@ EPSILON = 1.0
 SAVE = True
 LOAD = False
 # save frequency
-SAVE_FREQ = int(1e+3)
+SAVE_FREQ = int(2e+3)
 # paths for predction net, target net, result log
-PRED_PATH = './data/model/dqn_pred_net_o_' + args.games + '.pkl'
-TARGET_PATH = './data/model/dqn_target_net_o_' + args.games + '.pkl'
+PRED_PATH = './data/model/mvg_pred_net_o_' + args.games + '.pkl'
+TARGET_PATH = './data/model/mvg_target_net_o_' + args.games + '.pkl'
 RESULT_PATH = './data/plots/dqn_result_o_' + args.games + '.pkl'
 
 
@@ -231,11 +236,11 @@ logdir = './Mvg_DQN/%s' % args.games + '/%i' % int(time.time())
 logger_kwargs = setup_logger_kwargs(args.games, args.seed, data_dir=logdir)
 logger = EpochLogger(**logger_kwargs)
 kwargs = {
-
+        'learning rate':LR,
         'seed': args.seed,
     }
 logger.save_config(kwargs)
-# model load with check
+# model_1 load with check
 if LOAD and os.path.isfile(PRED_PATH) and os.path.isfile(TARGET_PATH):
     dqn.load_model()
     pkl_file = open(RESULT_PATH, 'rb')
@@ -317,8 +322,8 @@ for step in range(1, STEP_NUM // N_ENVS + 1):
         logger.log_tabular('time', time_interval)
         # logger.log_tabular("loss", with_min_and_max=True)
         logger.dump_tabular()
-        # save model
-        # dqn.save_model()
+        # save model_1
+        dqn.save_model()
         # pkl_file = open(RESULT_PATH, 'wb')
         # pickle.dump(np.array(result), pkl_file)
         # pkl_file.close()
