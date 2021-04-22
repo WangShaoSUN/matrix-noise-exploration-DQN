@@ -80,7 +80,10 @@ PRED_PATH = './data/model/mvg_pred_net_o_' + args.games + '.pkl'
 TARGET_PATH = './data/model/mvg_target_net_o_' + args.games + '.pkl'
 RESULT_PATH = './data/plots/dqn_result_o_' + args.games + '.pkl'
 
-
+if osp.exists("./data/model"):
+    print(" directory exist")
+else:
+    os.makedirs("./data/model")
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
