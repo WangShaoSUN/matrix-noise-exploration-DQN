@@ -244,7 +244,7 @@ else:
 print('Collecting experience...')
 
 # episode step for accumulate reward 
-epinfobuf = deque(maxlen=50)
+epinfobuf = deque(maxlen=100)
 # check learning time
 start_time = time.time()
 
