@@ -20,7 +20,7 @@ parser = argparse.ArgumentParser(description='Some settings of the experiment.')
 parser.add_argument('--games', type=str,default="Zaxxon", help='name of the games. for example: Breakout')
 parser.add_argument('--seed', type=int,default=0, help='seed of the games')
 parser.add_argument('--nenv', type=int,default=32, help='seed of the games')
-parser.add_argument('--lr', type=int,default=0.0003, help='seed of the games')
+parser.add_argument('--lr',type=float,default=0.0003, help='seed of the games')
 args = parser.parse_args()
 args.games = "".join(args.games)
 
