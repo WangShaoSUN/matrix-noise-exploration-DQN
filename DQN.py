@@ -21,6 +21,7 @@ parser.add_argument('--games', type=str,default="Zaxxon", help='name of the game
 parser.add_argument('--seed', type=int,default=0, help='seed of the games')
 parser.add_argument('--nenv', type=int,default=32, help='seed of the games')
 parser.add_argument('--lr',type=float,default=0.0003, help='seed of the games')
+parser.add_argument('--save_freq',type=int,default=1000, help='seed of the games')
 args = parser.parse_args()
 args.games = "".join(args.games)
 
@@ -67,7 +68,7 @@ EPSILON = 1.0
 SAVE = True
 LOAD = False
 # save frequency
-SAVE_FREQ = int(1e+3)
+SAVE_FREQ = int(args.save_freq)
 # paths for predction net, target net, result log
 PRED_PATH = './data/model/dqn_pred_net_o_'+args.games+'.pkl'
 TARGET_PATH = './data/model/dqn_target_net_o_'+args.games+'.pkl'
