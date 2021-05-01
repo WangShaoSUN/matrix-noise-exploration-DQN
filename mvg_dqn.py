@@ -52,7 +52,7 @@ GAMMA = 0.99
 RENDERING = False
 # openai gym env name
 # args.games="Breakout"
-ENV_NAME = args.games
+ENV_NAME = args.games+'NoFrameskip-v4'
 print(ENV_NAME)
 env = SubprocVecEnv([wrap_cover(ENV_NAME,args.seed+i) for i in range(N_ENVS)])
 N_ACTIONS = env.action_space.n
