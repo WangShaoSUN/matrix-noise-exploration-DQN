@@ -16,12 +16,15 @@ import os
 import pickle
 import time
 from collections import deque
+import matplotlib.pyplot as plt
+from wrappers_atari import wrap, wrap_cover, SubprocVecEnv
+
 # 处理输入参数（游戏名称）
 import argparse
 
 parser = argparse.ArgumentParser(description='Some settings of the experiment.')
-parser.add_argument('--games', type=str, default="TimePilot", help='name of the games. for example: Breakout')
-parser.add_argument('--seed', type=int,default=0, help='seed of the games')
+parser.add_argument('--games', type=str, default="WizardOfWor", help='name of the games. for example: Breakout')
+parser.add_argument('--seed', type=int,default=1200, help='seed of the games')
 args = parser.parse_args()
 
 args.games = "".join(args.games)
@@ -49,7 +52,7 @@ GAMMA = 0.99
 RENDERING = False
 # openai gym env name
 # args.games="Breakout"
-ENV_NAME = args.games + 'NoFrameskip-v4'
+ENV_NAME = args.games
 print(ENV_NAME)
 env = SubprocVecEnv([wrap_cover(ENV_NAME,args.seed+i) for i in range(N_ENVS)])
 N_ACTIONS = env.action_space.n
@@ -254,7 +257,7 @@ else:
 print('Collecting experience...')
 
 # episode step for accumulate reward
-epinfobuf = deque(maxlen=100)
+epinfobuf = deque(maxlen=50)
 # check learning time
 start_time = time.time()
 
